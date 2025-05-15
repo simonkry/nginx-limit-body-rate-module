@@ -1,0 +1,9 @@
+a.out
+cmake-build-debug
+.idea
+CMakeLists.txt
+nginx-*
+backup/
+.vscode/
+results/
+tmp_file.bin

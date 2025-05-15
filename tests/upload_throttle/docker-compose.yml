@@ -1,0 +1,81 @@
+services:
+  reverse-proxy:
+    build:
+      dockerfile: ../../docker/nginx_proxy/Dockerfile
+    volumes:
+      - ../../nginx-1.26.3/objs/nginx:/usr/sbin/nginx
+      - ./configs/nginx.conf:/usr/local/nginx/conf/nginx.conf
+      - ./configs/reverse_proxy.conf:/usr/local/nginx/conf.d/reverse_proxy.conf
+      - ../../docker/nginx_proxy/conf.d/default.conf:/usr/local/nginx/conf.d/default.conf
+      - ../../docker/nginx_proxy/monitor_overhead.sh:/mnt/monitor_overhead.sh
+      - ./results:/mnt/results
+    depends_on:
+      - backend
+    networks:
+      pop_network:
+        ipv4_address: 192.168.1.2
+      public_network:
+        ipv4_address: 10.0.0.2
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 2G
+
+  backend:
+    build:
+      context: ../../docker/apache_backend
+      args:
+        SERVER_NAME: www.example-1.com
+    volumes:
+      - ../../docker/apache_backend/upload.php:/var/www/upload-handler/upload.php
+      - ../../docker/apache_backend/php.ini:/etc/php83/php.ini
+      - ../../docker/tmp_file/tmp_file.bin:/var/www/html/tmp_file.bin
+    networks:
+      pop_network:
+        ipv4_address: 192.168.1.11
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 1G
+
+  client:
+    build:
+      context: ../../docker/client
+    volumes:
+      - ../../docker/client/client_traffic_test.sh:/mnt/client_traffic_test.sh
+      - ../../docker/tmp_file/tmp_file.bin:/mnt/tmp_file.bin
+      - ./results:/mnt/results
+    depends_on:
+      - reverse-proxy
+    networks:
+      - public_network
+    extra_hosts:
+      - "www.example-1.com:10.0.0.2"
+    environment:
+      - NUM_UPLOADS=${NUM_UPLOADS}
+      - NUM_DOWNLOADS=${NUM_DOWNLOADS}
+      - BURST=${BURST}
+      - WAIT_TIME=${WAIT_TIME}
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 128M
+
+networks:
+  # one Point of Presence network
+  pop_network:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
+  # public "Internet" network
+  public_network:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.0.0/16
