@@ -33,7 +33,7 @@ Next, compile the source code:
 This creates the binary `nginx` in the `nginx-1.26.3/objs` directory.
 
 
-## Testing scenarios
+## Testing suite
 
 Several testing scenarios are designed in the [tests](./tests) directory.
 
