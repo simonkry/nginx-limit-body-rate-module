@@ -4,7 +4,7 @@ nginx filter module for rate limiting HTTP request body data, ensuring controlle
 
 See [thesis](docs/thesis.pdf) for more details on the design, implementation, and testing suite.
 
-See my custom [request frequency limiting module](https://github.com/simonkry/nginx-limit-request-frequency-module).
+See also: [custom HTTP request frequency limiting module](https://github.com/simonkry/nginx-limit-request-frequency-module).
 
 *This software was developed with the support of the Faculty of Information Technology, Czech Technical University in Prague, [fit.cvut.cz](https://fit.cvut.cz/).*
 
