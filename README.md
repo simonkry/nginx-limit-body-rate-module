@@ -6,6 +6,10 @@ See [thesis](docs/thesis.pdf) for more details on the design, implementation, an
 
 See my custom [request frequency limiting module](https://github.com/simonkry/nginx-limit-request-frequency-module).
 
+*This software was developed with the support of the Faculty of Information Technology, Czech Technical University in Prague, [fit.cvut.cz](https://fit.cvut.cz/).*
+
+![](fit_logo.svg)
+
 ## Building the nginx binary
 
 To build the binary, please download the official open-source nginx stable version 1.26.3 source code:
